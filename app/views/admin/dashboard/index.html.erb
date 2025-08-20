@@ -1,0 +1,220 @@
+<div>
+  <div class="py-1 px-5 text-center">
+    <h1>Bienvenue dans votre espace artiste</h1>
+  </div>
+
+  <div class="py-1 px-5 text-center">
+    <nav>
+      <%= link_to new_artwork_path, class: "btn btn-custom mb-2" do %>
+        <i class="fa-solid fa-palette"></i> Ajouter un élément
+      <% end %>
+      <%= button_to destroy_user_session_path, method: :delete, class: "btn btn-custom" do %>
+        <i class="fa-solid fa-power-off"></i> Se déconnecter
+      <% end %>
+    </nav>
+  </div>
+
+  <div class="py-2 px-5">
+    <%= form_with url: admin_dashboard_path, method: :get, local: true do %>
+      <label for="category">Filtrer par catégorie :</label>
+      <%= select_tag :category, options_for_select(["", "Boutique", "Portfolio", "Prestation"], params[:category]), class: "select-custom" %>
+      <%= submit_tag "Filtrer", class: "btn btn-custom mb-3" %>
+    <% end %>
+
+    <h2 class="mb-4">Mes œuvres</h2>
+
+    <% if @artworks.any? %>
+      <div class="d-flex flex-wrap">
+        <% @artworks.each do |art| %>
+          <div class="col-1-4">
+            <div class="card card-custom text-center shadow-sm h-100 d-flex flex-column justify-content-between position-relative">
+
+              <%= link_to toggle_publish_admin_artwork_path(art), data: { 'turbo-method': :patch }, class: "badge-unpublished", title: (art.published? ? "Dépublier" : "Publier") do %>
+                <% if art.published? %>
+                  <i class="fa-regular fa-eye"></i>
+                <% else %>
+                  <i class="fa-regular fa-eye-slash"></i>
+                <% end %>
+              <% end %>
+
+              <%= link_to artwork_path(art), class: "text-decoration-none text-dark" do %>
+                <% if art.images.attached? %>
+                  <%= image_tag art.images.first.variant(resize_to_fill: [300, 200]).processed, class: "image-fixed", alt: art.title %>
+                <% else %>
+                  <%= image_tag "placeholder.jpg", class: "image-fixed", alt: "Aucune image" %>
+                <% end %>
+
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1"><%= art.title %></h6>
+                  <p class="card-text text-muted mb-1 small">
+                    <%= art.category.capitalize %>
+                    <% if art.sub_category.present? %>
+                      - <%= art.sub_category.titleize %>
+                    <% end %>
+                  </p>
+                  <p class="card-text fw-bold mb-0 small"><%= number_to_currency(art.price) %></p>
+                </div>
+              <% end %>
+
+              <div class="card-footer bg-transparent border-0 d-flex justify-content-center gap-2 py-2">
+                <%= link_to edit_artwork_path(art), class: "btn btn-sm btn-outline-primary", title: "Modifier" do %>
+                  <i class="fas fa-edit"></i>
+                <% end %>
+
+                <%= button_to artwork_path(art), method: :delete, data: { confirm: "Supprimer cette œuvre ?" }, class: "btn btn-sm btn-outline-danger", title: "Supprimer" do %>
+                  <i class="fas fa-trash-alt"></i>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted">Aucune œuvre pour l’instant.</p>
+    <% end %>
+
+
+
+  <div class="py-1 px-5">
+    <% unless current_user.stripe_account_id.present? %>
+      <%= button_to "Connecter mon compte Stripe", '/stripe/connect', method: :post, class: "btn btn-custom" %>
+    <% end %>
+  </div>
+
+  <div class="p-5">
+    <h2 class="mb-4">Newsletters</h2>
+
+    <%= link_to "Créer une nouvelle newsletter", new_newsletter_path, class: "btn btn-custom mb-4" %>
+
+    <div style="max-height: 400px; overflow-y: auto;">
+      <table class="table table-striped table-hover rounded shadow-sm" style="border-collapse: separate; border-spacing: 0; overflow: hidden; border-radius: 12px;">
+        <thead class="bg-primary text-white">
+          <tr>
+            <th>Sujet</th>
+            <th>Créée le</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Newsletter.order(created_at: :desc).each do |newsletter| %>
+            <tr>
+              <td><%= newsletter.subject %></td>
+              <td><%= l(newsletter.created_at, format: :short) %></td>
+              <td>
+                <%= link_to "Voir", preview_email_newsletter_path(newsletter), class: "btn btn-sm btn-light me-2" %>
+                <%= button_to "Envoyer", send_to_subscribers_newsletter_path(newsletter),
+                    method: :post,
+                    data: { confirm: "Envoyer cette newsletter à tous les abonnés actifs ?" },
+                    class: "btn btn-sm btn-success" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="p-5">
+    <h1>Tableau des commandes</h1>
+
+    <div style="max-height: 400px; overflow-y: auto;">
+      <table class="table table-striped table-hover rounded shadow-sm" style="border-collapse: separate; border-spacing: 0; overflow: hidden; border-radius: 12px;">
+        <thead class="bg-primary text-white">
+          <tr>
+            <th>ID</th>
+            <th>Acheteur</th>
+            <th>Œuvres</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th>Date de commande</th>
+            <th>Mise à jour</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @orders.each do |order| %>
+            <tr>
+              <td><%= order.id %></td>
+              <td><%= order.email %></td>
+              <td>
+                <% order.artworks.each do |art| %>
+                  <div><%= art.title %></div>
+                <% end %>
+              </td>
+              <td><%= number_to_currency(order.total_amount) %></td>
+              <td><%= order.status_label %></td>
+              <td><%= l(order.created_at, format: :short) %></td>
+              <td>
+                <%= form_with model: [:admin, order], method: :patch, local: true do |f| %>
+                  <%= f.select :status, Order.statuses.map { |key, _| [Order.new(status: key).status_label, key] }, selected: order.status, class: "form-select form-select-sm" %>
+                  <%= f.submit "Mettre à jour", class: "btn btn-sm btn-primary mt-1" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="p-5">
+    <h2>Statistiques de Visites</h2>
+
+    <div class="mb-4">
+      <h4>Visites aujourd'hui</h4>
+      <p><%= @visites_aujourdhui.count %> visites aujourd'hui</p>
+    </div>
+
+    <div class="mb-4">
+      <h4>Visites cette semaine</h4>
+      <p><%= @visites_semaine.count %> visites cette semaine</p>
+    </div>
+
+    <div class="mb-4">
+      <h4>Visites ce mois</h4>
+      <p><%= @visites_mois.count %> visites ce mois</p>
+    </div>
+
+    <div class="mb-4">
+      <h4>Source du trafic</h4>
+      <ul>
+        <% @source_traffics.each do |source, count| %>
+          <li><%= source.present? ? source.capitalize : "Direct" %> : <%= count %> visites</li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="mb-4">
+      <h4>Localisation des utilisateurs (par ville)</h4>
+      <ul>
+        <% @localisation_visites.each do |city, count| %>
+          <li><%= city.present? ? city : "Inconnue" %> : <%= count %> visites</li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <div class="p-5">
+    <h2>Gestion des images</h2>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-3">
+      <% @default_image_names.each do |image_name| %>
+        <div class="col">
+          <div class="card border-light shadow-sm" style="height: 250px; background-color: #F9F3EF">
+            <% page_image = PageImage.find_by(name: image_name) %>
+
+            <% if page_image && page_image.image.attached? %>
+              <%= image_tag url_for(page_image.image.variant(resize_to_fill: [150, 150])), class: "card-img-top img-fluid object-fit-cover", alt: "Image pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
+            <% else %>
+              <%= image_tag image_name, class: "card-img-top img-fluid object-fit-cover", alt: "Image par défaut pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
+            <% end %>
+
+            <div class="card-body">
+              <h5 class="card-title text-center"><%= image_name.capitalize %></h5>
+              <%= link_to 'Changer cette image', admin_new_image_path(name: image_name), class: "btn btn-sm btn-custom w-100" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

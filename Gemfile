@@ -42,7 +42,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
 gem "bootstrap", "~> 5.3"
 gem "devise"
@@ -50,6 +50,8 @@ gem "autoprefixer-rails"
 gem "font-awesome-sass", "~> 6.1"
 gem "simple_form", github: "heartcombo/simple_form"
 gem "sassc-rails"
+gem "stripe"
+gem 'ahoy_matey'
 
 group :development, :test do
   gem "dotenv-rails"
@@ -72,4 +74,16 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+end
+
+group :development do
+  gem 'letter_opener'
+end
+
+group :development do
+  gem 'letter_opener_web'
+end
+
+group :development, :test do
+  gem 'byebug'
 end

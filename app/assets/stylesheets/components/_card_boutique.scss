@@ -1,0 +1,61 @@
+.image-wrapper {
+  height: 350px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+
+.vertical-img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+.fixed-size {
+  width: 220px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.image-hover-wrapper {
+  height: 350px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+
+.image-hover-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+
+.primary-img {
+  opacity: 1;
+  z-index: 1;
+}
+
+.secondary-img {
+  opacity: 0;
+  z-index: 2;
+}
+
+.image-hover-wrapper:hover .secondary-img {
+  opacity: 1;
+}
+
+.image-hover-wrapper:hover .primary-img {
+  opacity: 0;
+}

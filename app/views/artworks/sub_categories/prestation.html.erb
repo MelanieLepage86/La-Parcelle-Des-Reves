@@ -1,0 +1,29 @@
+<div class="p-4 mt-4">
+  <% if @artworks.any? %>
+    <% @artworks.each do |artwork| %>
+      <div class="row mb-5 text-center">
+        <div class="col-md-6 pe-md-1 mt-5 pt-5 align-middle">
+          <h2 class="mb-3"><%= artwork.title %></h2>
+          <p class="mb-4 text-justify"><%= simple_format(artwork.description) %></p>
+
+          <div class="text-center">
+            <%= link_to "Contactez-nous", new_contact_path, class: "btn btn-custom px-4 py-2" %>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="row g-2">
+            <% artwork.images.first(4).each do |img| %>
+              <div class="col-6">
+                <%= image_tag img.variant(resize_to_fill: [400, 300]), class: "img-fluid rounded" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p>Aucune prestation trouvée.</p>
+  <% end %>
+
+</div>

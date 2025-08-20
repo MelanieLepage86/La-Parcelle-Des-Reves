@@ -1,0 +1,27 @@
+<div class="p-5">
+  <h1>Votre panier</h1>
+
+  <% if @artworks.any? %>
+    <ul>
+      <% @artworks.each do |art| %>
+        <li>
+          <%= art.title %> - <%= number_to_currency(art.price) %>
+
+            <%= button_to remove_from_cart_path(artwork_id: art.id), method: :post, form: { class: 'd-inline' }, data: { confirm: 'Voulez-vous vraiment retirer cet article ?' }, class: 'btn btn-custom btn-sm ms-2' do %>
+              <i class="fa-solid fa-trash-can"></i>
+            <% end %>
+        </li>
+      <% end %>
+    </ul>
+
+    <p><strong>Total :</strong> <%= number_to_currency(@artworks.sum(&:price)) %></p>
+
+    <%= form_with url: checkout_cart_path, method: :post do %>
+      <%= label_tag :email, "Votre adresse e-mail" %>
+      <%= email_field_tag :email, nil, required: true %>
+      <%= submit_tag "Valider la commande" %>
+    <% end %>
+  <% else %>
+    <p>Votre panier est vide.</p>
+  <% end %>
+</div>
