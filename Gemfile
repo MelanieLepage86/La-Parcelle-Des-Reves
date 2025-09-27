@@ -52,6 +52,7 @@ gem "simple_form", github: "heartcombo/simple_form"
 gem "sassc-rails"
 gem "stripe"
 gem 'ahoy_matey'
+gem 'countries'
 
 group :development, :test do
   gem "dotenv-rails"

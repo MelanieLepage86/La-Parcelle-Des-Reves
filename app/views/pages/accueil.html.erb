@@ -1,5 +1,11 @@
 <main class="position-relative text-center bg-light" style="height: calc(100vh - 183px)">
-  <%= image_tag(PageImage.find_by(name: 'acceuil')&.image.attached? ? url_for(PageImage.find_by(name: 'acceuil.jpg').image) : asset_path('acceuil.jpg'), class: "w-100 h-100 object-fit-cover position-absolute top-0 start-0", alt: "Photo principale") %>
+  <% page_image = PageImage.find_by(name: 'acceuil') %>
+
+  <%= image_tag(
+        page_image&.image&.attached? ? url_for(page_image.image) : asset_path('acceuil.jpg'),
+        class: "w-100 h-100 object-fit-cover position-absolute top-0 start-0",
+        alt: "Photo principale"
+      ) %>
 
   <div class="position-absolute start-50 translate-middle-x justify-content-center" style="margin-top: 200px">
     <div class="mt-5 mb-4" style="font-size: 20px">

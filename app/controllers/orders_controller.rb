@@ -1,40 +1,32 @@
 class OrdersController < ApplicationController
-  def new
-    @artwork = Artwork.find(params[:artwork_id])
-    @order = Order.new
-  end
-
   def create
     @artwork = Artwork.find(params[:artwork_id])
     email = params[:order][:email]
-    artist = @artwork.user
 
-    @order = Order.create!(
-      user: artist,
-      email: email,
-      total_amount: @artwork.price,
-      status: 'pending'
-    )
+    ActiveRecord::Base.transaction do
+      @order = Order.create!(
+        email: email,
+        total_amount: @artwork.price,
+        delivery_method: params[:order][:delivery_method],
+        country: params[:order][:country],
+        status: 'pending'
+      )
 
-    @order.order_items.create!(
-      artwork: @artwork,
-      quantity: 1,
-      unit_price: @artwork.price
-    )
+      @order.order_items.create!(
+        artwork: @artwork,
+        quantity: 1,
+        unit_price: @artwork.price
+      )
 
-    payment_intent = Stripe::PaymentIntent.create(
-      amount: (@artwork.price * 100).to_i,
-      currency: 'eur',
-      payment_method_types: ['card'],
-      transfer_data: {
-        destination: @artwork.user.stripe_account_id
-      }
-    )
+      @artwork.update!(sold: true)
 
-    @order.update!(stripe_payment_intent_id: payment_intent.id)
+      shipping_cost = ShippingCalculator.new(@order).calculate
+      @order.update!(shipping_cost: shipping_cost)
+    end
 
     redirect_to order_path(@order)
   rescue ActiveRecord::RecordInvalid => e
+    logger.error "Order creation failed: #{e.message}"
     flash[:alert] = "Une erreur est survenue : #{e.message}"
     redirect_to artwork_path(@artwork)
   end
@@ -43,9 +35,19 @@ class OrdersController < ApplicationController
     @order = Order.find(params[:id])
   end
 
-  def payment_intent
-    order = Order.find(params[:id])
-    intent = Stripe::PaymentIntent.retrieve(order.stripe_payment_intent_id)
-    render json: { client_secret: intent.client_secret }
+  def cancel
+    @order = Order.find(params[:id])
+
+    if @order.status == "pending"
+      @order.order_items.each do |item|
+        item.artwork.update!(sold: false)
+      end
+
+      @order.destroy
+      session[:cart] = []
+      redirect_to root_path, notice: "Commande annulée avec succès."
+    else
+      redirect_to order_path(@order), alert: "Impossible d'annuler une commande déjà payée ou traitée."
+    end
   end
 end

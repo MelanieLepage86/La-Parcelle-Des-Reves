@@ -6,36 +6,79 @@ class CartsController < ApplicationController
   end
 
   def show
-    @artworks = Artwork.find(session[:cart])
+    @artworks = Artwork.where(id: session[:cart]).with_attached_images
     @cart_count = session[:cart].size
   end
 
-  def checkout
+  def checkout_info
     if session[:cart].blank?
       redirect_to cart_path, alert: "Votre panier est vide."
       return
     end
 
-    email = params[:email]
-    artworks = Artwork.find(session[:cart])
+    @order = Order.new
+  end
 
-    total = artworks.sum(&:price)
-    order = Order.create!(email: email, total_amount: total)
-
-    artworks.each do |art|
-      order.order_items.create!(artwork: art, quantity: 1, unit_price: art.price)
+  def checkout_create_order
+    if session[:cart].blank?
+      redirect_to cart_path, alert: "Votre panier est vide."
+      return
     end
 
-    payment_intent = Stripe::PaymentIntent.create(
-      amount: (total * 100).to_i,
-      currency: 'eur',
-      automatic_payment_methods: { enabled: true }
-    )
+    artworks = Artwork.where(id: session[:cart])
+    artworks_total = artworks.sum(&:price)
 
-    order.update!(stripe_payment_intent_id: payment_intent.id)
+    if artworks.any?(&:sold)
+      redirect_to cart_path, alert: "Certaines œuvres dans votre panier ont déjà été vendues."
+      return
+    end
+
+    @order = Order.new(order_params)
+    @order.status = 'pending'
+
+    ActiveRecord::Base.transaction do
+      @order.save!
+
+      artworks.each do |art|
+        @order.order_items.create!(
+          artwork: art,
+          quantity: 1,
+          unit_price: art.price
+        )
+        art.update!(sold: true)
+      end
+
+      shipping_cost = ShippingCalculator.new(@order).calculate
+      @order.update!(
+        shipping_cost: shipping_cost,
+        total_amount: artworks_total + shipping_cost
+      )
+    end
+
     session[:cart] = []
+    redirect_to checkout_payment_cart_path(@order)
 
-    redirect_to order_path(order)
+  rescue ActiveRecord::RecordInvalid
+    Rails.logger.debug "=== ERREURS VALIDATION ORDER ==="
+    Rails.logger.debug @order.errors.full_messages.join(", ")
+    render :checkout_info, status: :unprocessable_entity
+  end
+
+  def checkout_payment
+    @order = Order.find(params[:id])
+
+    if @order.stripe_payment_intent_id.blank?
+      payment_intent = Stripe::PaymentIntent.create(
+        amount: (@order.total_amount * 100).to_i,
+        currency: 'eur',
+        automatic_payment_methods: { enabled: true },
+        metadata: { order_id: @order.id }
+      )
+
+      @order.update!(stripe_payment_intent_id: payment_intent.id)
+    end
+
+    @stripe_public_key = ENV['STRIPE_PUBLIC_KEY']
   end
 
   def remove
@@ -43,5 +86,32 @@ class CartsController < ApplicationController
     artwork_id = params[:artwork_id].to_i
     session[:cart].delete(artwork_id)
     redirect_to cart_path, notice: "Article retiré du panier"
+  end
+
+  def payment_intent
+    order = Order.find(params[:id])
+
+    if order.stripe_payment_intent_id.present?
+      payment_intent = Stripe::PaymentIntent.retrieve(order.stripe_payment_intent_id)
+    else
+      payment_intent = Stripe::PaymentIntent.create(
+        amount: (order.total_amount * 100).to_i,
+        currency: 'eur',
+        automatic_payment_methods: { enabled: true },
+        metadata: { order_id: order.id }
+      )
+      order.update!(stripe_payment_intent_id: payment_intent.id)
+    end
+
+    render json: { client_secret: payment_intent.client_secret }
+  end
+
+  private
+
+  def order_params
+    params.require(:order).permit(
+      :delivery_method, :first_name, :last_name, :email, :phone,
+      :address_line, :postal_code, :city, :country
+    )
   end
 end

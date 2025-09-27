@@ -9,9 +9,9 @@ class Admin::OrdersController < ApplicationController
   def update
     @order = Order.find(params[:id])
     if @order.update(status: params[:order][:status])
-      redirect_to admin_orders_path, notice: "Statut mis à jour"
+      redirect_to admin_dashboard_path, notice: "Statut mis à jour"
     else
-      redirect_to admin_orders_path, alert: "Erreur lors de la mise à jour du statut"
+      redirect_to admin_dashboard_path, alert: "Erreur lors de la mise à jour du statut"
     end
   end
 

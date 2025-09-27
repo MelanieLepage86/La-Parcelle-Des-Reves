@@ -76,8 +76,11 @@
 
 
   <div class="py-1 px-5">
-    <% unless current_user.stripe_account_id.present? %>
-      <%= button_to "Connecter mon compte Stripe", '/stripe/connect', method: :post, class: "btn btn-custom" %>
+    <% if current_user.stripe_account_id.present? %>
+      <p>✅ Compte Stripe connecté</p>
+      <%= link_to "Voir mon dashboard Stripe", stripe_dashboard_path, class: "btn btn-custom mt-2", target: "_blank" %>
+    <% else %>
+      <%= link_to 'Connecter mon compte Stripe', connect_stripe_path, class: "btn btn-custom" %>
     <% end %>
   </div>
 
@@ -85,6 +88,7 @@
     <h2 class="mb-4">Newsletters</h2>
 
     <%= link_to "Créer une nouvelle newsletter", new_newsletter_path, class: "btn btn-custom mb-4" %>
+    <%= link_to "Voir les abonnés", admin_newsletter_subscribers_path, class: "btn btn-custom mb-4 ms-2" %>
 
     <div style="max-height: 400px; overflow-y: auto;">
       <table class="table table-striped table-hover rounded shadow-sm" style="border-collapse: separate; border-spacing: 0; overflow: hidden; border-radius: 12px;">
@@ -127,29 +131,67 @@
             <th>Total</th>
             <th>Statut</th>
             <th>Date de commande</th>
+            <th>Méthode de réception</th>
             <th>Mise à jour</th>
+            <th>Détails</th>
           </tr>
         </thead>
         <tbody>
           <% @orders.each do |order| %>
             <tr>
               <td><%= order.id %></td>
-              <td><%= order.email %></td>
+              <td><%= "#{order.first_name} #{order.last_name}" %> <br><small class="text-muted"><%= order.email %></small></td>
               <td>
                 <% order.artworks.each do |art| %>
                   <div><%= art.title %></div>
                 <% end %>
               </td>
-              <td><%= number_to_currency(order.total_amount) %></td>
-              <td><%= order.status_label %></td>
+              <td><%= number_to_currency(order.total_amount, unit: "€") %></td>
+              <td>
+                <span class="badge <%= bootstrap_badge_class(order.status) %> rounded-pill"><%= order.status_label %></span>
+              </td>
               <td><%= l(order.created_at, format: :short) %></td>
+              <td><%= order.delivery_method_label %></td>
               <td>
                 <%= form_with model: [:admin, order], method: :patch, local: true do |f| %>
                   <%= f.select :status, Order.statuses.map { |key, _| [Order.new(status: key).status_label, key] }, selected: order.status, class: "form-select form-select-sm" %>
-                  <%= f.submit "Mettre à jour", class: "btn btn-sm btn-primary mt-1" %>
+                  <%= f.submit "Mettre à jour", class: "btn btn-sm btn-custom mt-1" %>
                 <% end %>
               </td>
+              <td>
+                <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#orderModal<%= order.id %>">
+                  Voir détails
+                </button>
+              </td>
             </tr>
+            <div class="modal fade" id="orderModal<%= order.id %>" tabindex="-1" aria-labelledby="orderModalLabel<%= order.id %>" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel<%= order.id %>">Détails de la commande #<%= order.id %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                  </div>
+                  <div class="modal-body">
+                    <strong>Nom :</strong> <%= order.first_name %> <%= order.last_name %><br>
+                    <strong>Email :</strong> <%= order.email %><br>
+                    <strong>Téléphone :</strong> <%= order.phone %><br>
+                    <strong>Adresse :</strong> <%= order.address_line %>, <%= order.postal_code %> <%= order.city %>, <%= order.country %><br>
+                    <strong>Mode de réception :</strong> <%= order.delivery_method_label %><br>
+                    <hr>
+                    <strong>Œuvres commandées :</strong>
+                    <ul>
+                      <% order.artworks.each do |art| %>
+                        <li><%= art.title %> - <%= number_to_currency(art.price, unit: "€") %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           <% end %>
         </tbody>
       </table>

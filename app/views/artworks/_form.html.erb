@@ -35,6 +35,17 @@
                 prompt: "Choisir une sous-catégorie",
                 input_html: { data: { sub_category_target: "subCategory" } } %>
 
+    <%= f.input :shipping_category,
+                label: "Catégorie de livraison (selon le poids)",
+                collection: [
+                  ["Catégorie 1 – jusqu’à 250g", "categorie_1"],
+                  ["Catégorie 2 – 250g à 500g", "categorie_2"],
+                  ["Catégorie 3 – 500g à 1kg", "categorie_3"],
+                  ["Catégorie 4 – 1kg à 2kg", "categorie_4"]
+                ],
+                prompt: "Choisir une catégorie de livraison",
+                required: true %>
+
     <%= f.input :published,
                 label: "Publier ?",
                 as: :boolean,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_18_170018) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_25_132050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_18_170018) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "sub_category"
+    t.string "shipping_category"
+    t.boolean "sold"
     t.index ["user_id"], name: "index_artworks_on_user_id"
   end
 
@@ -128,18 +130,36 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_18_170018) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.decimal "total_amount", precision: 10, scale: 2
     t.string "stripe_payment_intent_id"
     t.string "status", default: "pending"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone"
+    t.string "address_line"
+    t.string "postal_code"
+    t.string "city"
+    t.string "country"
+    t.string "delivery_method"
+    t.decimal "shipping_cost"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "page_images", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "shipping_rates", force: :cascade do |t|
+    t.string "zone"
+    t.integer "category"
+    t.decimal "full_price"
+    t.decimal "reduced_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

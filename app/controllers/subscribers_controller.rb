@@ -3,10 +3,10 @@ class SubscribersController < ApplicationController
     @subscriber = Subscriber.new(subscriber_params)
     if @subscriber.save
       flash[:notice] = "Merci pour votre inscription !"
-      redirect_to root_path
+      redirect_to new_contact_path
     else
       flash[:alert] = "Une erreur est survenue."
-      redirect_to root_path
+      redirect_to new_contact_path
     end
   end
 

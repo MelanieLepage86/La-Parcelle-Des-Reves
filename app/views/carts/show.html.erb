@@ -1,26 +1,62 @@
 <div class="p-5">
-  <h1>Votre panier</h1>
+  <div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center">
+
+      <div class="text-center flex-fill position-relative">
+        <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #7A94B0">
+          <i class="fa-solid fa-leaf fa-lg" style="color: #F9F3EF;"></i>
+        </div>
+        <p class="mt-2 fw-bold" style="color: #7A94B0;">Panier</p>
+      </div>
+
+      <div class="flex-fill border-top border-3 mx-2" style="margin-top: 1px; border-color: #7A94B0"></div>
+
+      <div class="text-center flex-fill position-relative">
+        <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #F9F3EF">
+          <i class="fa-solid fa-leaf fa-lg" style="color: #7A94B0;"></i>
+        </div>
+        <p class="mt-2 text-muted" style="color: #7A94B0;">Formulaire</p>
+      </div>
+
+      <div class="flex-fill border-top border-3 mx-2" style="margin-top: 1px; border-color: #7A94B0"></div>
+
+      <div class="text-center flex-fill position-relative">
+        <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px;  background-color: #F9F3EF">
+          <i class="fa-solid fa-leaf fa-lg" style="color: #7A94B0;"></i>
+        </div>
+        <p class="mt-2 text-muted" style="color: #7A94B0;">Paiement</p>
+      </div>
+
+    </div>
+  </div>
 
   <% if @artworks.any? %>
     <ul>
       <% @artworks.each do |art| %>
-        <li>
-          <%= art.title %> - <%= number_to_currency(art.price) %>
+        <li class="d-flex align-items-center mb-3">
 
-            <%= button_to remove_from_cart_path(artwork_id: art.id), method: :post, form: { class: 'd-inline' }, data: { confirm: 'Voulez-vous vraiment retirer cet article ?' }, class: 'btn btn-custom btn-sm ms-2' do %>
+          <% if art.images.attached? %>
+            <%= image_tag url_for(art.images.first), alt: art.title, width: 100, class: "me-3" %>
+          <% end %>
+
+          <div>
+            <strong><%= art.title %></strong> - <%= number_to_currency(art.price, unit: "€", separator: ",", delimiter: " ") %><br>
+
+            <%= button_to remove_from_cart_path(artwork_id: art.id), method: :post, form: { class: 'd-inline' }, data: { confirm: 'Voulez-vous vraiment retirer cet article ?' }, class: 'btn btn-custom btn-sm mt-2' do %>
               <i class="fa-solid fa-trash-can"></i>
             <% end %>
+          </div>
+
         </li>
       <% end %>
     </ul>
 
-    <p><strong>Total :</strong> <%= number_to_currency(@artworks.sum(&:price)) %></p>
+    <p><strong>Total :</strong> <%= number_to_currency(@artworks.sum(&:price), unit: "€", separator: ",", delimiter: " ") %></p>
 
-    <%= form_with url: checkout_cart_path, method: :post do %>
-      <%= label_tag :email, "Votre adresse e-mail" %>
-      <%= email_field_tag :email, nil, required: true %>
-      <%= submit_tag "Valider la commande" %>
-    <% end %>
+    <div class="d-flex gap-2 mt-3 flex-wrap">
+      <%= link_to "Continuer mes achats", boutique_artworks_path, class: "btn btn-custom" %>
+      <%= link_to "Finaliser ma commande", checkout_info_cart_path, class: "btn btn-custom" %>
+    </div>
   <% else %>
     <p>Votre panier est vide.</p>
   <% end %>

@@ -50,6 +50,10 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
+  def newsletter_subscribers
+    @subscribers = Subscriber.order(created_at: :desc)
+  end
+
   private
 
   def check_if_admin

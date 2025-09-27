@@ -15,11 +15,20 @@ class StripeController < ApplicationController
 
     link = Stripe::AccountLink.create({
       account: account.id,
-      refresh_url: root_url,
+      refresh_url: connect_stripe_url,
       return_url: root_url,
       type: 'account_onboarding'
     })
 
     redirect_to link.url, allow_other_host: true
+  end
+
+  def dashboard
+    if current_user.stripe_account_id.present?
+      link = Stripe::Account.create_login_link(current_user.stripe_account_id)
+      redirect_to link.url, allow_other_host: true
+    else
+      redirect_to root_path, alert: "Aucun compte Stripe connecté."
+    end
   end
 end
