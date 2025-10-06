@@ -14,6 +14,7 @@ class Order < ApplicationRecord
 
   enum status: {
     pending: 'pending',
+    payment_confirmed: 'payment_confirmed',
     valide: 'valide',
     en_cours: 'en_cours',
     expedie: 'expedie',
@@ -26,6 +27,7 @@ class Order < ApplicationRecord
   def status_label
     {
       "pending" => "En attente",
+      "payment_confirmed" => "Paiement confirmé",
       "valide" => "Validée",
       "en_cours" => "En cours",
       "expedie" => "Expédiée",

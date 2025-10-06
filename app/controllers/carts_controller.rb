@@ -1,13 +1,14 @@
 class CartsController < ApplicationController
   def add
     session[:cart] ||= []
-    session[:cart] << params[:artwork_id].to_i unless session[:cart].include?(params[:artwork_id].to_i)
+    artwork_id = params[:artwork_id].to_i
+    session[:cart] << artwork_id unless session[:cart].include?(artwork_id)
     redirect_to cart_path, notice: "Ajouté au panier"
   end
 
   def show
     @artworks = Artwork.where(id: session[:cart]).with_attached_images
-    @cart_count = session[:cart].size
+    @cart_count = session[:cart]&.size || 0
   end
 
   def checkout_info
@@ -57,10 +58,10 @@ class CartsController < ApplicationController
 
     session[:cart] = []
     redirect_to checkout_payment_cart_path(@order)
-
-  rescue ActiveRecord::RecordInvalid
-    Rails.logger.debug "=== ERREURS VALIDATION ORDER ==="
-    Rails.logger.debug @order.errors.full_messages.join(", ")
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error "=== ERREURS VALIDATION ORDER ==="
+    Rails.logger.error "Exception: #{e.message}"
+    Rails.logger.error @order.errors.full_messages.join(", ")
     render :checkout_info, status: :unprocessable_entity
   end
 
@@ -72,7 +73,8 @@ class CartsController < ApplicationController
         amount: (@order.total_amount * 100).to_i,
         currency: 'eur',
         automatic_payment_methods: { enabled: true },
-        metadata: { order_id: @order.id }
+        metadata: { order_id: @order.id },
+        transfer_group: "order_#{@order.id}"
       )
 
       @order.update!(stripe_payment_intent_id: payment_intent.id)
@@ -98,7 +100,9 @@ class CartsController < ApplicationController
         amount: (order.total_amount * 100).to_i,
         currency: 'eur',
         automatic_payment_methods: { enabled: true },
-        metadata: { order_id: order.id }
+        metadata: { order_id: order.id },
+        transfer_group: "order_#{order.id}",
+        capture_method: 'automatic'
       )
       order.update!(stripe_payment_intent_id: payment_intent.id)
     end

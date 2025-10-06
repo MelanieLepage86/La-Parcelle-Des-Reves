@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'webhooks/stripe'
   namespace :admin, path: '/parmatouze1317' do
     get 'dashboard', to: 'dashboard#index', as: 'dashboard'
     get 'dashboard/new_image', to: 'dashboard#new_image', as: 'new_image'
