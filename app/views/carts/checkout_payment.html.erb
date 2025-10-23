@@ -5,7 +5,7 @@
         <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #7A94B0">
           <i class="fa-solid fa-leaf fa-lg" style="color: #F9F3EF;"></i>
         </div>
-        <p class="mt-2 fw-bold" style="color: #7A94B0;">Panier</p>
+        <p class="mt-2 fw-bold" style="color: #7A94B0; font-size: 1.2rem;">Panier</p>
       </div>
 
       <div class="flex-fill border-top border-3 mx-2" style="margin-top: 1px; border-color: #7A94B0"></div>
@@ -14,7 +14,7 @@
         <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #7A94B0">
           <i class="fa-solid fa-leaf fa-lg" style="color: #F9F3EF;"></i>
         </div>
-        <p class="mt-2 text-muted" style="color: #7A94B0;">Formulaire</p>
+        <p class="mt-2 text-muted" style="color: #7A94B0; font-size: 1.2rem;">Formulaire</p>
       </div>
 
       <div class="flex-fill border-top border-3 mx-2" style="margin-top: 1px; border-color: #7A94B0"></div>
@@ -23,13 +23,13 @@
         <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #7A94B0">
           <i class="fa-solid fa-leaf fa-lg" style="color: #F9F3EF;"></i>
         </div>
-        <p class="mt-2 text-muted" style="color: #7A94B0;">Paiement</p>
+        <p class="mt-2 text-muted" style="color: #7A94B0; font-size: 1.2rem;">Paiement</p>
       </div>
     </div>
 
     <div class="mt-5">
-      <h4 class="mb-3">Récapitulatif de votre commande</h4>
-      <table class="table">
+      <h3 class="mb-3">Récapitulatif de votre commande</h3>
+      <table class="table" style="font-size: 1.2rem; background-color: #F9F3EF;">
         <tbody>
           <tr>
             <th scope="row">Total des œuvres</th>
@@ -48,8 +48,8 @@
     </div>
 
     <div class="mt-4">
-      <h4 class="mb-3">Vos informations</h4>
-      <ul class="list-unstyled">
+      <h3 class="mb-3">Vos informations</h3>
+      <ul class="list-unstyled" style="font-size: 1.2rem;">
         <li><strong>Nom :</strong> <%= @order.first_name %> <%= @order.last_name %></li>
         <li><strong>Email :</strong> <%= @order.email %></li>
         <li><strong>Téléphone :</strong> <%= @order.phone %></li>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="mt-5">
-      <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#paymentModal">
+      <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#paymentModal" style="font-size: 1.2rem;">
         Payer
       </button>
 
@@ -84,7 +84,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-3">
+    <div class="mt-3" style="font-size: 1.2rem;">
       <%= button_to "Annuler la commande", cancel_order_path(@order), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir annuler cette commande ?" }, class: "btn btn-custom w-10" %>
     </div>
   </div>

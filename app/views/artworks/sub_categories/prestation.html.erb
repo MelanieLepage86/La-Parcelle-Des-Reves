@@ -4,17 +4,17 @@
       <div class="row mb-5 text-center">
         <div class="col-md-6 pe-md-1 mt-5 pt-5 align-middle">
           <h2 class="mb-3"><%= artwork.title %></h2>
-          <p class="mb-4 text-justify"><%= simple_format(artwork.description) %></p>
+          <p class="mb-4 text-justify" style="font-size: 2rem;"><%= simple_format(artwork.description) %></p>
 
           <div class="text-center">
-            <%= link_to "Contactez-nous", new_contact_path, class: "btn btn-custom px-4 py-2" %>
+            <%= link_to "Contactez-nous", new_contact_path, class: "btn btn-custom px-4 py-2 mb-3", style: "font-size: 1.2rem;"%>
           </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 mt-5">
           <div class="row g-2">
             <% artwork.images.first(4).each do |img| %>
-              <div class="col-6">
+              <div class="col-6 mb-3">
                 <%= image_tag img.variant(resize_to_fill: [400, 300]), class: "img-fluid rounded" %>
               </div>
             <% end %>

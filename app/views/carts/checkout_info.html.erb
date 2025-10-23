@@ -6,7 +6,7 @@
         <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #7A94B0">
           <i class="fa-solid fa-leaf fa-lg" style="color: #F9F3EF;"></i>
         </div>
-        <p class="mt-2" style="color: #7A94B0;">Panier</p>
+        <p class="mt-2" style="color: #7A94B0; font-size: 1.2rem;">Panier</p>
       </div>
 
       <div class="flex-fill border-top border-3 mx-2" style="margin-top: 1px; border-color: #ffc107;"></div>
@@ -15,14 +15,14 @@
         <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #7A94B0">
           <i class="fa-solid fa-leaf fa-lg" style="color: #F9F3EF;"></i>
         </div>
-        <p class="mt-2 fw-bold" style="color: #7A94B0;">Formulaire</p>
+        <p class="mt-2 fw-bold" style="color: #7A94B0; font-size: 1.2rem;">Formulaire</p>
       </div>
 
       <div class="flex-fill border-top border-3 mx-2" style="margin-top: 1px; border-color: #ffc107;"></div>
 
       <div class="text-center flex-fill position-relative">
         <div class="rounded-circle mx-auto p-3" style="width: 60px; height: 60px; background-color: #F9F3EF">
-          <i class="fa-solid fa-leaf fa-lg" style="color: #7A94B0;"></i>
+          <i class="fa-solid fa-leaf fa-lg" style="color: #7A94B0; font-size: 1.2rem;"></i>
         </div>
         <p class="mt-2 text-muted">Paiement</p>
       </div>
@@ -31,21 +31,21 @@
   </div>
   <h2>Informations de livraison</h2>
 
-  <%= simple_form_for @order, url: checkout_create_order_cart_path, method: :post, local: true do |f| %>
+  <%= simple_form_for @order, url: checkout_create_order_cart_path, class: "col-6", method: :post, local: true do |f| %>
     <%= f.input :delivery_method,
                 label: "Mode de réception",
                 collection: Order.delivery_methods.map { |key, _| [t("activerecord.attributes.order.delivery_method.#{key}"), key] },
                 prompt: "Choisissez un mode de réception",
                 required: true,
-                input_html: { class: "form-select form-select-sm" } %>
+                input_html: { class: "form-select form-select", style: "width: 25%;" } %>
 
-    <%= f.input :first_name, label: "Prénom", input_html: { class: "form-control form-control-sm" } %>
-    <%= f.input :last_name, label: "Nom", input_html: { class: "form-control form-control-sm" } %>
-    <%= f.input :email, label: "Email", input_html: { class: "form-control form-control-sm" } %>
-    <%= f.input :phone, label: "Téléphone", input_html: { class: "form-control form-control-sm" } %>
-    <%= f.input :address_line, label: "Adresse postale", input_html: { class: "form-control form-control-sm" } %>
-    <%= f.input :postal_code, label: "Code postal", input_html: { class: "form-control form-control-sm" } %>
-    <%= f.input :city, label: "Ville", input_html: { class: "form-control form-control-sm" } %>
+    <%= f.input :first_name, label: "Prénom", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
+    <%= f.input :last_name, label: "Nom", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
+    <%= f.input :email, label: "Email", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
+    <%= f.input :phone, label: "Téléphone", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
+    <%= f.input :address_line, label: "Adresse postale", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
+    <%= f.input :postal_code, label: "Code postal", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
+    <%= f.input :city, label: "Ville", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
 
     <%= f.input :country,
                 label: "Pays",
@@ -54,7 +54,7 @@
                 },
                 prompt: "Sélectionner un pays",
                 required: true,
-                input_html: { class: "form-select form-select-sm" } %>
+                input_html: { class: "form-select form-select", style: "width: 50%;" } %>
 
     <%= f.submit "Procéder au paiement", class: "btn btn-custom mt-3" %>
   <% end %>
