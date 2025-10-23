@@ -36,8 +36,8 @@ zones = {
 
 zones.each do |zone, full_prices|
   full_prices.each_with_index do |full_price, index|
-    category = index + 1 # 1 à 4
-    reduced_price = (full_price * 0.5).round(2) # 50% du tarif complet, ajustable
+    category = index + 1
+    reduced_price = (full_price * 0.25).round(2)
 
     ShippingRate.create!(
       zone: zone,
