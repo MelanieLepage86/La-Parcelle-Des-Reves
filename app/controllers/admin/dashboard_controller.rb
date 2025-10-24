@@ -23,9 +23,9 @@ class Admin::DashboardController < ApplicationController
 
     @page_images = PageImage.all
     @default_image_names = [
-      "acceuil", "Boutique - Curiosités", "Boutique - Peinture", "Boutique-Cyano",
-      "Portfolio - Nature", "Portfolio - Photomanip", "Portfolio - Portrait",
-      "Portfolio - Reportage", "Presta - Cyano", "Presta - Peinture", "Presta - Photo"
+      "acceuil", "Boutique-Curiosités", "Boutique-Peinture", "Boutique-Cyano",
+      "Portfolio-Nature", "Portfolio-Photomanip", "Portfolio-Portrait",
+      "Portfolio-Reportage", "Presta-Cyano", "Presta-Peinture", "Presta-Photo"
     ]
 
     @orders = Order.includes(order_items: :artwork).order(created_at: :desc)
@@ -33,9 +33,9 @@ class Admin::DashboardController < ApplicationController
 
   def new_image
     @image_names = [
-      "acceuil", "Boutique - Curiosités", "Boutique - Peinture", "Boutique-Cyano",
-      "Portfolio - Nature", "Portfolio - Photomanip", "Portfolio - Portrait",
-      "Portfolio - Reportage", "Presta - Cyano", "Presta - Peinture", "Presta - Photo"
+      "acceuil", "Boutique-Curiosités", "Boutique-Peinture", "Boutique-Cyano",
+      "Portfolio-Nature", "Portfolio-Photomanip", "Portfolio-Portrait",
+      "Portfolio-Reportage", "Presta-Cyano", "Presta-Peinture", "Presta-Photo"
     ]
     @page_image = PageImage.new
   end
