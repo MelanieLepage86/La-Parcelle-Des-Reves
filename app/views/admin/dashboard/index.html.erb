@@ -247,7 +247,7 @@
             <% if page_image && page_image.image.attached? %>
               <%= image_tag url_for(page_image.image.variant(resize_to_fill: [150, 150])), class: "card-img-top img-fluid object-fit-cover", alt: "Image pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
             <% else %>
-              <%= image_tag image_name, class: "card-img-top img-fluid object-fit-cover", alt: "Image par défaut pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
+              <%= image_tag "#{image_name}.jpg", class: "card-img-top img-fluid object-fit-cover", alt: "Image par défaut pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
             <% end %>
 
             <div class="card-body">
