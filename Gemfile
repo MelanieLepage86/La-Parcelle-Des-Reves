@@ -90,3 +90,5 @@ group :development, :test do
 end
 
 gem "ostruct"
+gem 'cloudinary'
+gem 'activestorage-cloudinary-service'

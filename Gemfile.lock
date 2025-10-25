@@ -73,6 +73,7 @@ GEM
       activerecord (= 7.1.5.2)
       activesupport (= 7.1.5.2)
       marcel (~> 1.0)
+    activestorage-cloudinary-service (0.2.3)
     activesupport (7.1.5.2)
       base64
       benchmark (>= 0.3)
@@ -116,6 +117,11 @@ GEM
       xpath (~> 3.2)
     childprocess (5.1.0)
       logger (~> 1.5)
+    cloudinary (2.4.0)
+      faraday (>= 2.0.1, < 3.0.0)
+      faraday-follow_redirects (~> 0.3.0)
+      faraday-multipart (~> 1.0, >= 1.0.4)
+      ostruct
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
     countries (8.0.3)
@@ -140,6 +146,16 @@ GEM
     erb (5.0.2)
     erubi (1.13.1)
     execjs (2.10.0)
+    faraday (2.14.0)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-follow_redirects (0.3.0)
+      faraday (>= 1, < 3)
+    faraday-multipart (1.1.1)
+      multipart-post (~> 2.0)
+    faraday-net_http (3.4.1)
+      net-http (>= 0.5.0)
     ffi (1.17.2-aarch64-linux-gnu)
     ffi (1.17.2-aarch64-linux-musl)
     ffi (1.17.2-arm-linux-gnu)
@@ -169,6 +185,7 @@ GEM
     jbuilder (2.14.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
+    json (2.15.2)
     launchy (3.1.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
@@ -196,7 +213,10 @@ GEM
     mini_mime (1.1.5)
     minitest (5.25.5)
     msgpack (1.8.0)
+    multipart-post (2.4.1)
     mutex_m (0.3.0)
+    net-http (0.6.0)
+      uri
     net-imap (0.5.9)
       date
       net-protocol
@@ -332,6 +352,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unaccent (0.4.0)
+    uri (1.0.4)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -360,12 +381,14 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  activestorage-cloudinary-service
   ahoy_matey
   autoprefixer-rails
   bootsnap
   bootstrap (~> 5.3)
   byebug
   capybara
+  cloudinary
   countries
   debug
   devise
