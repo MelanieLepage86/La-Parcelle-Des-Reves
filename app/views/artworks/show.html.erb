@@ -31,7 +31,7 @@
 
     <div class="col-md-6">
       <h2 class="mb-3"><%= @artwork.title %></h2>
-      <p class="mb-3"><%= @artwork.description %></p>
+      <p class="mb-3"><%= simple_format(@artwork.description) %></p>
       <p class="mb-4 fw-bold fs-5">Prix : <%= number_to_currency(@artwork.price, unit: "€") %></p>
 
       <div class="text-center mt-4">
