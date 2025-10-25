@@ -38,10 +38,15 @@
               <% end %>
 
               <%= link_to artwork_path(art), class: "text-decoration-none text-dark" do %>
-                <% if art.images.attached? %>
-                  <%= image_tag art.images.first.variant(resize_to_fill: [300, 200]).processed, class: "image-fixed", alt: art.title %>
-                <% else %>
-                  <%= image_tag "placeholder.jpg", class: "image-fixed", alt: "Aucune image" %>
+                <% begin %>
+                  <% if art.images.attached? %>
+                    <%= image_tag art.images.first.variant(resize_to_fill: [300, 200]).processed, class: "image-fixed", alt: art.title %>
+                  <% else %>
+                    <%= image_tag "placeholder.jpg", class: "image-fixed", alt: "Aucune image" %>
+                  <% end %>
+                <% rescue ActiveStorage::IntegrityError, ActiveStorage::FileNotFoundError, StandardError => e %>
+                  <% Rails.logger.error "⚠️ Erreur image artwork ##{art.id} : #{e.message}" %>
+                  <%= image_tag "placeholder.jpg", class: "image-fixed", alt: "Image non disponible" %>
                 <% end %>
 
                 <div class="card-body p-2">
@@ -72,8 +77,7 @@
     <% else %>
       <p class="text-muted">Aucune œuvre pour l’instant.</p>
     <% end %>
-
-
+  </div>
 
   <div class="py-1 px-5">
     <% if current_user.stripe_account_id.present? %>
@@ -164,6 +168,7 @@
                 </button>
               </td>
             </tr>
+
             <div class="modal fade" id="orderModal<%= order.id %>" tabindex="-1" aria-labelledby="orderModalLabel<%= order.id %>" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -191,7 +196,6 @@
                 </div>
               </div>
             </div>
-
           <% end %>
         </tbody>
       </table>
@@ -244,10 +248,15 @@
           <div class="card border-light shadow-sm" style="height: 250px; background-color: #F9F3EF">
             <% page_image = PageImage.find_by(name: image_name) %>
 
-            <% if page_image && page_image.image.attached? %>
-              <%= image_tag url_for(page_image.image.variant(resize_to_fill: [150, 150])), class: "card-img-top img-fluid object-fit-cover", alt: "Image pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
-            <% else %>
-              <%= image_tag "#{image_name}.jpg", class: "card-img-top img-fluid object-fit-cover", alt: "Image par défaut pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
+            <% begin %>
+              <% if page_image && page_image.image.attached? %>
+                <%= image_tag url_for(page_image.image.variant(resize_to_fill: [150, 150])).processed, class: "card-img-top img-fluid object-fit-cover", alt: "Image pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
+              <% else %>
+                <%= image_tag "#{image_name}.jpg", class: "card-img-top img-fluid object-fit-cover", alt: "Image par défaut pour #{image_name}", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
+              <% end %>
+            <% rescue ActiveStorage::IntegrityError, ActiveStorage::FileNotFoundError, StandardError => e %>
+              <% Rails.logger.error "⚠️ Erreur image page #{image_name} : #{e.message}" %>
+              <%= image_tag "placeholder.jpg", class: "card-img-top img-fluid object-fit-cover", alt: "Image non disponible", style: "height: 150px; object-fit: cover; overflow: hidden;" %>
             <% end %>
 
             <div class="card-body">
