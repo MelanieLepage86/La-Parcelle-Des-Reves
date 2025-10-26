@@ -57,7 +57,7 @@
                       - <%= art.sub_category.titleize %>
                     <% end %>
                   </p>
-                  <p class="card-text fw-bold mb-0 small"><%= number_to_currency(art.price) %></p>
+                  <p class="card-text fw-bold mb-0 small"><%= number_to_currency(art.price, unit: "€", separator: ",", delimiter: " ") %></p>
                 </div>
               <% end %>
 

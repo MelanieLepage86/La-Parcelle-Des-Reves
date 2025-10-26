@@ -63,11 +63,11 @@
   left: 0;
 }
 
-.image-hover-wrapper:hover .primary-img {
+.image-hover-wrapper.has-hover:hover .primary-img {
   opacity: 0;
 }
 
-.image-hover-wrapper:hover .secondary-img {
+.image-hover-wrapper.has-hover:hover .secondary-img {
   opacity: 1;
 }
 
