@@ -1,5 +1,5 @@
 class OrderMailer < ApplicationMailer
-  default from: 'no-reply@laparcelledesreves.com'
+  default from: 'laparcelle@sandboxb102747a78724a1bafe1da68162ed7d4.mailgun.org'
 
   def confirmation_email(order)
     @order = order

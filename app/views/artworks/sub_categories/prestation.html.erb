@@ -1,10 +1,10 @@
 <div class="p-4 mt-4">
   <% if @artworks.any? %>
     <% @artworks.each do |artwork| %>
-      <div class="row mb-5 text-center">
-        <div class="col-md-6 pe-md-1 mt-5 pt-5 align-middle">
-          <h2 class="mb-3"><%= artwork.title %></h2>
-          <p class="mb-4 text-justify" style="font-size: 2rem;"><%= simple_format(artwork.description) %></p>
+      <div class="row mb-5">
+        <div class="col-md-6 pe-md-1 mt-5 pt-5">
+          <h2 class="mb-3 text-center"><%= artwork.title %></h2>
+          <p class="mb-4" style="font-size: 2rem; text-align: justify;"><%= simple_format(artwork.description) %></p>
 
           <div class="text-center">
             <%= link_to "Contactez-nous", new_contact_path, class: "btn btn-custom px-4 py-2 mb-3", style: "font-size: 1.2rem;"%>
@@ -25,5 +25,4 @@
   <% else %>
     <p>Aucune prestation trouvée.</p>
   <% end %>
-
 </div>

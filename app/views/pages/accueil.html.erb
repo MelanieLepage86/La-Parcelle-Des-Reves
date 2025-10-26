@@ -1,19 +1,19 @@
-<main class="position-relative text-center bg-light" style="height: calc(100vh - 183px)">
+<main class="d-flex flex-column justify-content-center align-items-center text-center bg-light position-relative" style="min-height: 80vh;">
   <% page_image = PageImage.find_by(name: 'acceuil') %>
 
   <%= image_tag(
         page_image&.image&.attached? ? url_for(page_image.image) : asset_path('acceuil.jpg'),
-        class: "w-100 h-100 object-fit-cover position-absolute top-0 start-0",
-        alt: "Photo principale"
+        class: "w-100 h-100 position-absolute top-0 start-0",
+        alt: "Photo principale",
+        style: "object-fit: cover; z-index: 0; height: 100%;"
       ) %>
 
-  <div class="position-absolute start-50 translate-middle-x justify-content-center" style="margin-top: 200px">
-    <div class="mt-5 mb-4" style="font-size: 20px">
+  <div class="position-relative text-white p-3" style="z-index: 1; max-width: 800px;">
+    <p class="fs-5 mb-4">
       Bienvenue dans l'univers d'Amélie et Catherine Barbedienne, un espace où la nature, la créativité et l’âme se rencontrent.
       Ici, chaque graine plantée nourrit un monde d’harmonie, d’inspiration et de douceur.<br>
       Laissez vous guider.
-    </div>
-
+    </p>
     <%= link_to "Boutique", boutique_artworks_path, class: "btn btn-custom px-5 py-2" %>
   </div>
 </main>

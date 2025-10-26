@@ -1,5 +1,5 @@
 class NewsletterMailer < ApplicationMailer
-  default from: 'newsletter@laparcelledesreves.com'
+  default from: 'laparcelle@sandboxb102747a78724a1bafe1da68162ed7d4.mailgun.org'
 
   def send_newsletter(subscriber, newsletter)
     @newsletter = newsletter

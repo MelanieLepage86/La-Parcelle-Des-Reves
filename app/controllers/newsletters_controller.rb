@@ -61,7 +61,7 @@ class NewslettersController < ApplicationController
     end
 
     flash[:notice] = "Newsletter envoyée !"
-    redirect_to @newsletter
+    redirect_to admin_dashboard_path
   end
 
   def preview_email
