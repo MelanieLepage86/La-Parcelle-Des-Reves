@@ -6,7 +6,7 @@ class NewsletterMailer < ApplicationMailer
     @subscriber = subscriber
     mail(
       to: @subscriber.email,
-      reply_to: 'newsletter@laparcelledesreves.com',
+      reply_to: 'laparcelle@sandboxb102747a78724a1bafe1da68162ed7d4.mailgun.org',
       subject: newsletter.subject
     )
   end
