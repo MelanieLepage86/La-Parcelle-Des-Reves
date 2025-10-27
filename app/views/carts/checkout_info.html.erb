@@ -29,33 +29,42 @@
 
     </div>
   </div>
-  <h2>Informations de livraison</h2>
+  <h2 class="text-center mb-4">Informations de livraison</h2>
 
-  <%= simple_form_for @order, url: checkout_create_order_cart_path, class: "col-6", method: :post, local: true do |f| %>
-    <%= f.input :delivery_method,
-                label: "Mode de réception",
-                collection: Order.delivery_methods.map { |key, _| [t("activerecord.attributes.order.delivery_method.#{key}"), key] },
-                prompt: "Choisissez un mode de réception",
-                required: true,
-                input_html: { class: "form-select form-select", style: "width: 25%;" } %>
+  <%= simple_form_for @order, url: checkout_create_order_cart_path, method: :post, local: true,
+        html: { class: "mx-auto", style: "max-width: 600px;" } do |f| %>
 
-    <%= f.input :first_name, label: "Prénom", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
-    <%= f.input :last_name, label: "Nom", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
-    <%= f.input :email, label: "Email", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
-    <%= f.input :phone, label: "Téléphone", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
-    <%= f.input :address_line, label: "Adresse postale", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
-    <%= f.input :postal_code, label: "Code postal", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
-    <%= f.input :city, label: "Ville", input_html: { class: "form-control form-control", style: "width: 50%;" } %>
+    <div class="row g-3">
+      <div class="col-12">
+        <%= f.input :delivery_method,
+                    label: "Mode de réception",
+                    collection: Order.delivery_methods.map { |key, _| [t("activerecord.attributes.order.delivery_method.#{key}"), key] },
+                    prompt: "Choisissez un mode de réception",
+                    required: true,
+                    input_html: { class: "form-select" } %>
+      </div>
 
-    <%= f.input :country,
-                label: "Pays",
-                collection: ISO3166::Country.all.map { |country|
-                  [country.translations[I18n.locale.to_s] || country.name, country.alpha2]
-                },
-                prompt: "Sélectionner un pays",
-                required: true,
-                input_html: { class: "form-select form-select", style: "width: 50%;" } %>
+      <div class="col-12"><%= f.input :first_name, label: "Prénom" %></div>
+      <div class="col-12"><%= f.input :last_name, label: "Nom" %></div>
+      <div class="col-12"><%= f.input :email, label: "Email" %></div>
+      <div class="col-12"><%= f.input :phone, label: "Téléphone" %></div>
+      <div class="col-12"><%= f.input :address_line, label: "Adresse postale" %></div>
+      <div class="col-12"><%= f.input :postal_code, label: "Code postal" %></div>
+      <div class="col-12"><%= f.input :city, label: "Ville" %></div>
+      <div class="col-12">
+        <%= f.input :country,
+                    label: "Pays",
+                    collection: ISO3166::Country.all.map { |country|
+                      [country.translations[I18n.locale.to_s] || country.name, country.alpha2]
+                    },
+                    prompt: "Sélectionner un pays",
+                    required: true,
+                    input_html: { class: "form-select" } %>
+      </div>
+    </div>
 
-    <%= f.submit "Procéder au paiement", class: "btn btn-custom mt-3" %>
+    <div class="mt-4 mb-5 text-center">
+      <%= f.submit "Procéder au paiement", class: "btn btn-custom mt-3" %>
+    </div>
   <% end %>
 </div>
