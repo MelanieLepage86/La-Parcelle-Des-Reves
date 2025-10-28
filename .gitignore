@@ -41,3 +41,10 @@
 .DS_Store
 
 .byebug_history
+
+
+node_modules/
+public/packs-test/
+coverage/
+test/
+spec/

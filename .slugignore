@@ -1,8 +1,8 @@
 log/
 tmp/
 storage/
-test/
-spec/
 node_modules/
 public/uploads/
+test/
+spec/
 coverage/
