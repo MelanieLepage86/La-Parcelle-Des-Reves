@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Facture Amélie - Commande <%= @order.id %></title>
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; color: #333; }
+    .container { width: 90%; margin: 20px auto; }
+    header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .seller-info { line-height: 1.4; }
+    .invoice-title { text-align: right; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f5f5f5; }
+    .totals { margin-top: 15px; width: 100%; display: flex; justify-content: flex-end; }
+    .totals div { width: 300px; }
+    .totals p { display: flex; justify-content: space-between; margin: 2px 0; }
+    footer { font-size: 10px; color: #888; text-align: center; margin-top: 40px; }
+    .section-title { background-color: #666; color: #fff; padding: 4px 8px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="seller-info">
+        <h2>Amélie Barbedienne EI</h2>
+        <p>8, rue Barthel<br>77000 Melun</p>
+        <p><a href="mailto:barbedienne.amelie@gmail.com">barbedienne.amelie@gmail.com</a><br>
+           <a href="https://www.laparcelledesreves.com">www.laparcelledesreves.com</a><br>
+           06 76 30 71 88
+        </p>
+      </div>
+      <div class="invoice-title">
+        <h3>Facture</h3>
+        <p>Numéro de facture : CI<%= @order.id %></p>
+        <p>Date de facture : <%= l(@order.created_at.to_date, format: :short) %></p>
+      </div>
+    </header>
+
+    <div>
+      <div class="section-title">Facturer à :</div>
+      <p><strong>Nom :</strong> <%= @order.last_name %></p>
+      <p><strong>Prénom :</strong> <%= @order.first_name %></p>
+      <p><strong>Adresse :</strong> <%= @order.address_line %>, <%= @order.postal_code %> <%= @order.city %>, <%= @order.country %></p>
+      <p><strong>Téléphone :</strong> <%= @order.phone %></p>
+      <p><strong>Email :</strong> <%= @order.email %></p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Quantité</th>
+          <th>Prix unitaire</th>
+          <th>Prix total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <td><%= item.artwork.title %></td>
+            <td><%= item.quantity || 1 %></td>
+            <td><%= number_to_currency(item.unit_price, unit: "€") %></td>
+            <td><%= number_to_currency(item.unit_price * (item.quantity || 1), unit: "€") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div>
+        <p><span>Sous-total :</span> <span><%= number_to_currency(@total_artworks, unit: "€") %></span></p>
+        <p><span>Frais de port :</span> <span><%= number_to_currency(@shipping_cost, unit: "€") %></span></p>
+        <p><strong>Total :</strong> <strong><%= number_to_currency(@total, unit: "€") %></strong></p>
+      </div>
+    </div>
+
+    <footer>
+      Numéro SIRET : 94308572000010 | Code APE 9003A | TVA non applicable<br>
+      Dispense d’immatriculation au registre du commerce et des sociétés, en application de l’article L. 123-1-1 du Code de commerce
+    </footer>
+  </div>
+</body>
+</html>

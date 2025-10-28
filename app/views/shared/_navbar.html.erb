@@ -13,10 +13,10 @@
     <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
       <ul class="navbar-nav align-items-center gap-lg-4">
         <li class="nav-item">
-          <%= link_to 'Accueil', page_daccueil_path, class: 'nav-link' %>
+          <%= link_to 'À Propos', a_propos_path, class: 'nav-link' %>
         </li>
         <li class="nav-item">
-          <%= link_to 'À Propos', a_propos_path, class: 'nav-link' %>
+          <%= link_to 'Prestations', prestations_artworks_path, class: 'nav-link' %>
         </li>
         <li class="nav-item">
           <%= link_to 'Portfolio', portfolio_artworks_path, class: 'nav-link' %>
@@ -24,11 +24,11 @@
 
 
         <li class="nav-item d-none d-lg-block fw-bold fs-5 mx-4 text-dark">
-          <h1>La Parcelle des Reves</h1>
+          <h1><%= link_to 'La Parcelle des Reves', page_daccueil_path, class: 'text-decoration-none text-dark' %></h1>
         </li>
 
         <li class="nav-item">
-          <%= link_to 'Prestations', prestations_artworks_path, class: 'nav-link' %>
+          <%= link_to 'Actualités', news_items_path, class: 'nav-link' %>
         </li>
         <li class="nav-item">
           <%= link_to 'Boutique', boutique_artworks_path, class: 'nav-link' %>

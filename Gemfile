@@ -92,3 +92,6 @@ end
 gem "ostruct"
 gem 'cloudinary'
 gem 'activestorage-cloudinary-service'
+
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'

@@ -3,7 +3,9 @@
 
     <div class="col-lg-4 col-md-6 col-12 d-flex justify-content-center">
       <div class="profile-card text-white text-center">
-        <img src="<%= asset_path('Catherine.jpg') %>" class="mb-3 profile-img" alt="Catherine">
+        <% page_image = PageImage.find_by(name: "Catherine") %>
+        <img src="<%= page_image&.image&.attached? ? url_for(page_image.image) : asset_path('Catherine.jpg') %>"
+            class="mb-3 profile-img" alt="Catherine">
         <h3 class="name-title">CATHERINE</h3>
         <p class="subtitle">Barbedienne</p>
         <p class="bio px-3 text-justify">
@@ -20,7 +22,7 @@
       <br>
       <p class="text-justify">
         La Parcelle des Rêves c'est l'histoire d'un lieu partagé, imaginé et rêvé par des sœurs jumelles, Amélie et Catherine Barbedienne, artistes pluridisciplinaires.<br><br>
-        Du haut de nos 34 automnes, nous avons voulu donner vie à un espace commun, afin de proposer une plateforme qui réunirait notre sensibilité pour l'Art, la Nature et le Bien-être.<br>
+        Du haut de nos 35 automnes, nous avons voulu donner vie à un espace commun, afin de proposer une plateforme qui réunirait notre sensibilité pour l'Art, la Nature et le Bien-être.<br>
         Issues d'une formation en arts plastiques et en photographie, nous avons tout naturellement poursuivi notre exploration du monde créatif ces 11 dernières années, tout en y intégrant notre passion pour la nature, et notre curiosité pour l'énergétique, le corps humain, l'être dans sa globalité.<br>
         Ici, nous vous invitons à entrer dans un univers singulier, qui s'inspire de nos longues marches en forêt, de nos voyages, de nos rencontres, de notre imaginaire, de notre histoire.
       </p>
@@ -29,7 +31,9 @@
 
     <div class="col-lg-4 col-md-6 col-12 d-flex justify-content-center">
       <div class="profile-card text-white text-center">
-        <img src="<%= asset_path('Amelie.jpg') %>" class="mb-3 profile-img" alt="Amélie">
+        <% page_image = PageImage.find_by(name: "Amelie") %>
+        <img src="<%= page_image&.image&.attached? ? url_for(page_image.image) : asset_path('Amelie.jpg') %>"
+            class="mb-3 profile-img" alt="Amélie">
         <h3 class="name-title">AMÉLIE</h3>
         <p class="subtitle">Barbedienne</p>
         <p class="bio px-3 text-justify">

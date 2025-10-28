@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_25_132050) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_28_103651) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -107,6 +107,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_25_132050) do
     t.string "email"
     t.text "message"
     t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "news_items", force: :cascade do |t|
+    t.string "title"
+    t.date "date"
+    t.string "location"
+    t.text "description"
+    t.string "source"
+    t.string "link"
+    t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

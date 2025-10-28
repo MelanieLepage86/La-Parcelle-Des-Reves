@@ -4,8 +4,15 @@ Rails.application.routes.draw do
     get 'dashboard/new_image', to: 'dashboard#new_image', as: 'new_image'
     post 'dashboard/create_image', to: 'dashboard#create_image', as: 'create_image'
     get 'newsletter_subscribers', to: 'dashboard#newsletter_subscribers', as: 'newsletter_subscribers'
+    resources :news_items
 
-    resources :orders, only: [:index, :update]
+    resources :orders, only: [:index, :update, :destroy] do
+      member do
+        get :invoice_catherine, defaults: { format: :pdf }
+        get :invoice_amelie, defaults: { format: :pdf }
+      end
+    end
+
     resources :artworks, only: [] do
       patch :toggle_publish, on: :member
     end
@@ -39,7 +46,6 @@ Rails.application.routes.draw do
   resources :contacts, only: [:new, :create]
   get '/page_daccueil', to: 'pages#accueil'
   get '/a_propos', to: 'pages#about'
-  get '/payment_intent/:id', to: 'carts#payment_intent', as: :payment_intent
   get '/connect_stripe', to: 'stripe#connect', as: :connect_stripe
   get '/stripe_dashboard', to: 'stripe#dashboard', as: :stripe_dashboard
   post '/add_to_cart', to: 'carts#add', as: :add_to_cart
@@ -72,4 +78,6 @@ Rails.application.routes.draw do
 
   get '/artworks/:category/:sub_category', to: 'artworks#sub_category', as: 'artworks_category_sub_category'
   post '/webhooks/stripe', to: 'webhooks#stripe'
+
+  resources :news_items, only: [:index, :show]
 end
